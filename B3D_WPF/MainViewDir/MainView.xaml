@@ -12,8 +12,12 @@
             <RowDefinition Height="5*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <ContentControl Grid.Row="0" Content="{Binding Controls}"/>
+        <ContentControl Grid.Row="0">
+            <Label Content="Controls"/>
+        </ContentControl>
         <ContentControl Grid.Row="1" Content="{Binding Canvas}"/>
-        <ContentControl Grid.Row="2" Content="{Binding ObjectLibrary}"/>
+        <ContentControl Grid.Row="2">
+            <Label Content="Object Library"/>
+        </ContentControl>
     </Grid>
 </UserControl>

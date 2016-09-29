@@ -92,7 +92,10 @@
     <Compile Include="MainWindowDir\MainWindowViewModel.cs" />
     <Compile Include="Models\Bases\ILine.cs" />
     <Compile Include="Models\Bases\IPoint.cs" />
+    <Compile Include="Models\BasicGeometry\GeomCalculator.cs" />
+    <Compile Include="Models\BasicGeometry\GridLine.cs" />
     <Compile Include="Models\BasicGeometry\Origin.cs" />
+    <Compile Include="Models\BasicGeometry\ShapeGen.cs" />
     <Compile Include="Models\BasicGeometry\Wall.cs" />
     <Compile Include="Models\BasicGeometry\Corner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

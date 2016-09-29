@@ -9,19 +9,13 @@
              xmlns:baseGeom="clr-namespace:B3D_WPF.Models.BasicGeometry"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <ItemsControl x:Name="itemsControl" ItemsSource="{Binding Path=CanvasObjects}" Width="{Binding ActualWidth, ElementName=userControl, Mode=OneWay}" Height="{Binding ActualHeight, ElementName=itemsControl, Mode=OneWay}">
-        <ItemsControl.ItemsPanel>
-            <ItemsPanelTemplate>
-                <Canvas Background="WhiteSmoke"/>
-            </ItemsPanelTemplate>
-        </ItemsControl.ItemsPanel>
-        <ItemsControl.Resources>
-            <DataTemplate DataType="{x:Type baseGeom:Wall}">
-                <Line X1="{Binding Start.X}" X2="{Binding End.X}" Y1="{Binding Start.Y}" Y2="{Binding End.Y}" Stroke="Gray" StrokeThickness="{Binding Thickness}"/>
-            </DataTemplate>
-            <DataTemplate DataType="{x:Type baseGeom:Origin}">
-                <Ellipse Width="15" Stroke="White" StrokeThickness="1" Fill="Black" Height="{Binding Width, RelativeSource={RelativeSource Self}}"/>
-            </DataTemplate>
-        </ItemsControl.Resources>
-    </ItemsControl>
+    <Canvas x:Name="TheCanvas"
+            Background="WhiteSmoke">
+        <i:Interaction.Triggers>
+            <i:EventTrigger EventName="MouseDown">
+                <mi:CallMethodAction MethodName="CanvasMouseDown" TargetObject="{Binding}"/>
+            </i:EventTrigger>
+        </i:Interaction.Triggers>
+        
+    </Canvas>
 </UserControl>
