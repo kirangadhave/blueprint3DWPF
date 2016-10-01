@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace B3D_WPF.Models.Bases
 {
@@ -16,10 +17,12 @@ namespace B3D_WPF.Models.Bases
         double StrokeThickness { get; set; }
         double Height { get; set; }
         double Width { get; set; }
+        Ellipse RepEllipse { get; set; }
     }
 
     public class PointBase : IPoint
     {
+        public Ellipse RepEllipse { get; set; }
         public double X { get; set; }
         public double Y { get; set; }
         public Brush FillBrush { get; set; }

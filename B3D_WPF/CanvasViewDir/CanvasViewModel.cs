@@ -24,6 +24,8 @@ namespace B3D_WPF.CanvasViewDir
         public Corner LastNode { get; set; }
         public double SnapTolerance { get; set; }
         public Point LastMousePosition { get; set; }
+        public bool MousePressed { get; set; }
+        public Corner HoveredCorner { get; set; }
         #region Canvas Objects
         public List<GridLine> Grids { get; set; }
         public Origin Origin { get; set; }
@@ -38,6 +40,7 @@ namespace B3D_WPF.CanvasViewDir
             CV.SizeChanged += CV_SizeChanged;
             ShapeGen.Can = CV.TheCanvas;
             SnapTolerance = 10;
+            ShapeGen.Can.MouseUp += CanvasMouseUp;
         }
 
         #region EventTriggers
@@ -51,16 +54,11 @@ namespace B3D_WPF.CanvasViewDir
             Generate();
         }
 
-        public void Generate()
-        {
-            GenerateGrid();
-            AddOrigin();
-            GenerateCorners();
-            GenerateWalls();
-        }
 
         public void CanvasMouseDown(object sender, MouseButtonEventArgs e)
         {
+            MousePressed = true;
+
             if (Corners == null)
                 Corners = new List<Corner>();
 
@@ -68,40 +66,83 @@ namespace B3D_WPF.CanvasViewDir
                 Walls = new List<Wall>();
 
             var mousePosition = e.MouseDevice.GetPosition(ShapeGen.Can);
-            LastMousePosition = mousePosition;
 
-            var cor = new Corner(mousePosition.X, mousePosition.Y)
+            var tempPoint = new Corner(mousePosition.X, mousePosition.Y);
+
+            if (HoveredCorner == null)
             {
-                FillBrush = Brushes.Black,
-                Height = 10,
-                Width = 10,
-                StrokeBrush = Brushes.White,
-                StrokeThickness = 1
-            };
-
-
-            Corners.ForEach(x =>
-            {
-                if(cor.DistanceFrom(x) <= SnapTolerance)
+                Corners.ForEach(x =>
                 {
-                    cor = x;
-                }
-            });
-            Corners.Add(cor);
-            cor.DrawPoint();
-
-            if (AddingWall && LastNode!=null)
-            {
-                var wall = new Wall(LastNode, cor);
-                Walls.Add(wall);
-                wall.StrokeBrush = Brushes.Black;
-                wall.DrawLine();
+                    if (x.RepEllipse.IsMouseDirectlyOver)
+                        HoveredCorner = x;
+                });
             }
+            if (HoveredCorner == null)
+            {
+                var cor = new Corner(mousePosition.X, mousePosition.Y)
+                {
+                    FillBrush = Brushes.Black,
+                    Height = 10,
+                    Width = 10,
+                    StrokeBrush = Brushes.White,
+                    StrokeThickness = 1
+                };
 
-            LastNode = cor;
-            AddingWall = true;
+                Corners.ForEach(x =>
+                {
+                    if (cor.DistanceFrom(x) <= SnapTolerance)
+                    {
+                        cor = x;
+                    }
+                });
+
+                if (Corners.Count(x => x.X == cor.X && x.Y == cor.Y) == 0)
+                    Corners.Add(cor);
+                cor.DrawPoint();
+
+                if (AddingWall && LastNode != null)
+                {
+                    var wall = new Wall(LastNode, cor);
+                    Walls.Add(wall);
+                    wall.StrokeBrush = Brushes.Black;
+                    wall.DrawLine();
+                }
+
+                LastNode = cor;
+                LastMousePosition = mousePosition;
+                AddingWall = true;
+            }
+        }
+
+
+        public void CanvasMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            MousePressed = false;
+        }
+
+        public void CanvasMouseMove(object sender, MouseEventArgs e)
+        {
+            MousePressed = Mouse.LeftButton == MouseButtonState.Pressed;
+            if (HoveredCorner != null)
+                if (MousePressed)
+                {
+                    HoveredCorner.X = e.MouseDevice.GetPosition(ShapeGen.Can).X;
+                    HoveredCorner.Y = e.MouseDevice.GetPosition(ShapeGen.Can).Y;
+                    ShapeGen.Can.Children.Clear();
+                    Generate();
+                }
+                else
+                    HoveredCorner = null;
         }
         #endregion
+
+        public void Generate()
+        {
+            GenerateGrid();
+            AddOrigin();
+            GenerateCorners();
+            GenerateWalls();
+        }
 
         private void GenerateGrid()
         {

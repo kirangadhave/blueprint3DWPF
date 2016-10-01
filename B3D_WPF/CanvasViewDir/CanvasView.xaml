@@ -15,6 +15,12 @@
             <i:EventTrigger EventName="MouseDown">
                 <mi:CallMethodAction MethodName="CanvasMouseDown" TargetObject="{Binding}"/>
             </i:EventTrigger>
+            <i:EventTrigger EventName="MouseUp">
+                <mi:CallMethodAction MethodName="CanvasMouseUp" TargetObject="{Binding}"/>
+            </i:EventTrigger>
+            <i:EventTrigger EventName="MouseMove">
+                <mi:CallMethodAction MethodName="CanvasMouseMove" TargetObject="{Binding}"/>
+            </i:EventTrigger>
         </i:Interaction.Triggers>
         
     </Canvas>

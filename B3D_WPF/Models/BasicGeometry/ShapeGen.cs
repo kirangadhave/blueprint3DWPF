@@ -28,9 +28,10 @@ namespace B3D_WPF.Models.BasicGeometry
                     Width = p.Width,
                     Height = p.Height
                 };
-
+                p.RepEllipse = ell;
                 if(p.GetType() == typeof(Corner))
                 {
+                    (p as Corner).RepEllipse = ell;
                     ell.MouseEnter += Ell_MouseEnter;
                     ell.MouseLeave += Ell_MouseLeave;
                 }
@@ -56,6 +57,11 @@ namespace B3D_WPF.Models.BasicGeometry
                     StrokeThickness = l.Thickness,
                     Stroke = l.StrokeBrush
                 };
+
+                //if (l.GetType() == typeof(GridLine))
+                    line.IsHitTestVisible = false;
+
+                l.RepLine = line;
                 Can.Children.Add(line);
             }
             catch (Exception) { return false; }
@@ -68,6 +74,7 @@ namespace B3D_WPF.Models.BasicGeometry
             var ell = sender as Ellipse;
             ell.Stroke = Brushes.White;
         }
+
         private static void Ell_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
             var ell = sender as Ellipse;
